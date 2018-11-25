@@ -1,7 +1,44 @@
 <!DOCTYPE html>
-<html lang="en">
-    <head></head>
-    <body>
-        <h1>Sup</h1>
-    </body>
+<html lang="en" ng-app="webRTCApp">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE-11" />
+    <meta name="description" ng-attr-content="$root.constants.description" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
+    <link rel="shortcut icon" href="/content/favicons/logo.ico" />
+
+    <title ng-bind="$root.constants.appName"></title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:normal,bold,italic,bolditalic"/>
+
+    <!-- inject:css -->
+    <link rel="stylesheet" href="content/css/all.css">
+    <link rel="stylesheet" href="content/css/bootstrap-grid.css">
+    <link rel="stylesheet" href="content/css/bootstrap-reboot.css">
+    <link rel="stylesheet" href="content/css/bootstrap.css">
+    <link rel="stylesheet" href="content/css/fontawesome.css">
+    <link rel="stylesheet" href="content/css/loading.css">
+    <link rel="stylesheet" href="content/css/site.css">
+    <!-- endinject -->
+</head>
+<body>
+    <nav-bar get-class="getClass"></nav-bar>
+    <div class="content" ng-view></div>
+
+    <!-- inject:js -->
+    <script src="dependencies/0_jquery/jquery-3.3.1.js"></script>
+    <script src="dependencies/2_bootstrap/bootstrap.js"></script>
+    <script src="dependencies/1_angularjs/angular-1.7.5.js"></script>
+    <script src="dependencies/1_angularjs/angular-animate-1.7.5.js"></script>
+    <script src="dependencies/1_angularjs/angular-cookies-1.7.5.js"></script>
+    <script src="dependencies/1_angularjs/angular-route-1.7.5.js"></script>
+    <script src="app-config/app.js"></script>
+    <script src="directives/nav-bar.js"></script>
+    <script src="directives/loading-overlay.js"></script>
+    <script src="controllers/page-not-found.js"></script>
+    <script src="controllers/error.js"></script>
+    <script src="controllers/call.js"></script>
+    <script src="app-config/run.js"></script>
+    <script src="app-config/config.js"></script>
+    <!-- endinject -->
+</body>
 </html>

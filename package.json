@@ -3,7 +3,18 @@
     "version": "0.0.1",
     "description": "A simple WebRTC App",
     "dependencies": {
-        "express": "*"
+        "angular": "^1.7.5",
+        "angular-animate": "^1.7.5",
+        "angular-cookies": "^1.7.5",
+        "angular-mock": "^1.0.0",
+        "angular-route": "^1.7.5",
+        "express": "*",
+        "gulp": "^3.9.1",
+        "gulp-angular-filesort": "^1.2.1",
+        "gulp-inject": "^5.0.0",
+        "gulp-sass": "^4.0.2",
+        "jquery": "^3.3.1",
+        "stream-series": "^0.1.1"
     },
     "engine": "node >=0.6.x",
     "scripts": {
