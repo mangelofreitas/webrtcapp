@@ -1,1 +1,27 @@
-<div>Call page</div>
+<div class="row">
+    <div class="col-md-2">
+        <div class="card text-white bg-dark mb-3">
+            <div class="card-header">Contacts</div>
+            <ul class="list-group list-group-flush">
+                <li ng-repeat="contact in Contacts"><a class="list-group-item bg-dark" ng-class="{'active': CurrentContactIndex == $index}" ng-click="callToContact(contact, $index)">{{contact.Name}}</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="col-md-10">
+        <div class="card text-white bg-dark mb-3">
+            <div class="card-header"> Conversation <p ng-if="CurrentContact"> with {{CurrentContact.Name}}</p></div>
+            <div class="card-body">
+                <div class="container-fluid">
+                    <div class="row align-items-center">
+                        <div class="col-md-6">
+                            <video id="localVideo" autoplay muted></video>
+                        </div>
+                        <div class="col-md-6">
+                            <video id="remoteVideo" autoplay></video>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

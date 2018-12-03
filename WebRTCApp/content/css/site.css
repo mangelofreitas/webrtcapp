@@ -109,3 +109,25 @@ nav.navbar-expand-lg ul.navbar-nav li {
 
 .error-img img {
   height: 10rem; }
+
+ul.list-group.list-group-flush {
+  overflow: auto;
+  max-height: 44em; }
+  ul.list-group.list-group-flush li a.list-group-item:hover,
+  ul.list-group.list-group-flush li a.list-group-item.active {
+    background-color: #007bff !important;
+    border-color: #007bff !important; }
+  ul.list-group.list-group-flush li a.list-group-item:hover {
+    cursor: pointer; }
+
+div.card .card-header > p {
+  display: inline;
+  margin: 0; }
+
+video {
+  max-width: calc(50% - 100px);
+  margin: 0 50px;
+  box-sizing: border-box;
+  border-radius: 2px;
+  padding: 0;
+  background: white; }
