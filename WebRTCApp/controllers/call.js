@@ -9,10 +9,7 @@
                 $rootScope.hideLoadingAnimation(true);
             },3000);
 
-            $scope.callToContact = (contact, index) => {
-                $scope.CurrentContactIndex = index;
-                $scope.CurrentContact = contact;
-            };
+            
 
             $scope.Contacts = [];
 
@@ -30,10 +27,11 @@
 
             var _generateRandomHash = function(){
                 // Generate random room name if needed
-                if (!location.hash) {
-                    location.hash = Math.floor(Math.random() * 0xFFFFFF).toString(16);
+                
+                if (!$location.hash()) {
+                    $location.hash(Math.floor(Math.random() * 0xFFFFFF).toString(16));
                 }
-                return location.hash.substring(1);
+                return $location.hash();
             };
 
             //#region Handle Functions
@@ -48,12 +46,67 @@
 
             var _sendMessage = function(message){
               $scope.entity.drone.publish({
-                  room: $scope.entity.room,
+                  room: $scope.entity.roomName,
                   message
               });  
             };
 
             //#endregion
+
+            var _localDescCreated = function(desc){
+                $scope.entity.pc.setLocalDescription(desc,function(){
+                    _sendMessage({'sdp': $scope.entity.pc.localDescription})
+                },_onError);
+            };
+
+            var _startCall = function(signal){
+                var entity = $scope.entity;
+                entity.pc = new RTCPeerConnection(entity.configuration);
+                entity.pc.onicecandidate = function(e){
+                    if(e.candidate){
+                        _sendMessage({'candidate': e.candidate});
+                    }
+                };
+                if(signal){
+                    entity.pc.onnegotiationneeded = function(){
+                        entity.pc.createOffer().then(_localDescCreated).catch(_onError);
+                    };
+                }
+
+                entity.pc.onaddstream = function(e){
+                    remoteVideo.srcObject = e.stream;
+                };
+
+                navigator.mediaDevices.getUserMedia({
+                    audio: true,
+                    video: true
+                }).then(function(result){
+                    localVideo.srcObject = result;
+                    entity.pc.addStream(result);
+                },_onError);
+
+                entity.room.on('data', function(message, client){
+                    if(client.id  === entity.drone.clientId){
+                        return;
+                    }
+
+                    if(message.sdp){
+                        entity.pc.setRemoteDescription(new RTCSessionDescription(message.sdp), function(){
+                            if(entity.pc.remoteDescription.type == "offer"){
+                                entity.pc.createAnswer().then(_localDescCreated).catch(_onError);
+                            }
+                        }, _onError);
+                    } else if(message.candidate){
+                        entity.pc.addIceCandidate(new RTCIceCandidate(message.candidate), _onSuccess, _onError);
+                    }
+                });
+            };
+            
+            $scope.callToContact = (contact, index) => {
+                $scope.CurrentContactIndex = index;
+                $scope.CurrentContact = contact;
+                _startCall(true);
+            };
 
             //#region Constructor
             var _constructor = function(){
@@ -79,7 +132,7 @@
                         }
                     })
                     entity.room.on('members', function(result){
-                        // var hasMultiple = result.length > 1;
+                        var hasMultiple = result.length > 1;
                         var newContactsList = [];
                         result.forEach(function(e){
                             newContactsList.push({
@@ -87,6 +140,9 @@
                             });
                         });
                         $scope.Contacts = newContactsList;
+                        if(!hasMultiple){
+                            _startCall(hasMultiple);
+                        }
                     });
                 });
 
