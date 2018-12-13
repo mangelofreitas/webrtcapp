@@ -172,17 +172,22 @@ ul.list-group.list-group-flush{
 }
 
 div.card{
-    .card-header>p{
-        display: inline;
-        margin: 0;
+    .card-header{
+        h2,button{
+            display: inline;
+        }
+
+        button{
+            float: right;
+        }
     }
 }
 
 video {
-    max-width: calc(50% - 100px);
+    max-width: 100%;
     margin: 0 50px;
     box-sizing: border-box;
     border-radius: 2px;
     padding: 0;
-    background: white;
+    background: #343a40;
 }

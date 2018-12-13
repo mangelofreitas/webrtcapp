@@ -1,0 +1,26 @@
+<div class="modal fade" id="roomWindow" tabindex="-1" role="dialog" aria-labelledby="roomWindowLabel" aria-hidden="true" data-backdrop="static">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Change room window</h5>
+                <button ng-show="hasHash()" type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form ng-submit="submit($event,entity)">
+                <div class="modal-body">
+                    <div class="form-group row">
+                        <label for="roomCode" class="col-md-4 col-form-label">Room Code</label>
+                        <div class="col-md-8">
+                            <input type="text" ng-model="entity.roomCode" class="form-control" id="roomCode" placeholder="ex: 57243b" required>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button ng-show="hasHash()" type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Change</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

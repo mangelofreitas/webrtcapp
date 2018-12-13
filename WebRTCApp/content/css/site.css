@@ -120,14 +120,16 @@ ul.list-group.list-group-flush {
   ul.list-group.list-group-flush li a.list-group-item:hover {
     cursor: pointer; }
 
-div.card .card-header > p {
-  display: inline;
-  margin: 0; }
+div.card .card-header h2, div.card .card-header button {
+  display: inline; }
+
+div.card .card-header button {
+  float: right; }
 
 video {
-  max-width: calc(50% - 100px);
+  max-width: 100%;
   margin: 0 50px;
   box-sizing: border-box;
   border-radius: 2px;
   padding: 0;
-  background: white; }
+  background: #343a40; }

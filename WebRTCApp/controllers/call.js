@@ -5,39 +5,19 @@
         .controller('CallController', function($scope, $location, $rootScope, $timeout){
             $rootScope.showLoadingAnimation();
 
-            $timeout(function(){
-                $rootScope.hideLoadingAnimation(true);
-            },3000);
-
-            
-
-            $scope.Contacts = [];
-
-            var _getRandomName = () =>{
-                return Math.random().toString(36);
-            };
-
-            var _generateRandomNames = (number) => {
-                for(var i=0; i<number; i++){
-                    $scope.Contacts.push({
-                        Name : _getRandomName()
-                    });
-                }
-            };
-
-            var _generateRandomHash = function(){
-                // Generate random room name if needed
-                
-                if (!$location.hash()) {
-                    $location.hash(Math.floor(Math.random() * 0xFFFFFF).toString(16));
-                }
+            var _getHashCode = function(){
                 return $location.hash();
             };
 
             //#region Handle Functions
 
+            $scope.changeRoom = function(result){
+                $location.hash(result.roomCode);
+                _constructor();
+            };
+
             var _onError = function(result) {
-                window.alert("An error occurred!\n"+result);
+                console.log("An error occurred!\n"+result);
             };
 
             var _onSuccess = function(result){
@@ -74,6 +54,7 @@
                 }
 
                 entity.pc.onaddstream = function(e){
+                    $.notify("You have a partner. The video-coference has started!", "success");
                     remoteVideo.srcObject = e.stream;
                 };
 
@@ -101,19 +82,14 @@
                     }
                 });
             };
-            
-            $scope.callToContact = (contact, index) => {
-                $scope.CurrentContactIndex = index;
-                $scope.CurrentContact = contact;
-                _startCall(true);
-            };
 
             //#region Constructor
             var _constructor = function(){
                 // ScaleDrone webrtc_channel
                 var entity = {};
                 entity.drone = new ScaleDrone('wRIpraeA5bQ2Q5zh');
-                entity.roomName = 'observable-'+_generateRandomHash();
+                entity.roomName = 'observable-'+_getHashCode();
+                // entity.roomName = 'observable-test';
                 entity.configuration = {
                     iceServers: [{
                         urls: 'stun:stun.l.google.com:19302'
@@ -132,16 +108,16 @@
                         }
                     })
                     entity.room.on('members', function(result){
-                        var hasMultiple = result.length > 1;
-                        var newContactsList = [];
-                        result.forEach(function(e){
-                            newContactsList.push({
-                                Name: e.id
-                            });
-                        });
-                        $scope.Contacts = newContactsList;
-                        if(!hasMultiple){
-                            _startCall(hasMultiple);
+                        var sendSignal = result.length == 2;
+                        if(result.length<=2){
+                            _startCall(sendSignal);
+                            if(!sendSignal){
+                                $.notify("You are alone in the room, wait for a partner to enter.", "info");    
+                            }
+                        }
+                        else{
+                            $.notify("Already two people on that room. Choose another!", "error");
+                            return;
                         }
                     });
                 });
@@ -150,8 +126,24 @@
                 $scope.entity = entity;
             };
 
-            _constructor();
+            // _constructor();
             
+            $scope.$watchCollection('openRoomWindow', function(newValue, oldValue){
+                if(newValue != oldValue || oldValue){
+                    if (!$location.hash()) {
+                        $scope.openRoomWindow();
+                    }
+                    else{
+                        _constructor();
+                    }
+                }
+            });
+
+            
+            $timeout(function(){
+                $rootScope.hideLoadingAnimation(true);
+                
+            });
             //#endregion
             // _generateRandomNames(20);
         });
