@@ -121,7 +121,8 @@ ul.list-group.list-group-flush {
     cursor: pointer; }
 
 div.card .card-header h2, div.card .card-header button {
-  display: inline; }
+  display: inline;
+  margin-right: 0.5em; }
 
 div.card .card-header button {
   float: right; }

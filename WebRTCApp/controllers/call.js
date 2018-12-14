@@ -13,7 +13,16 @@
 
             $scope.changeRoom = function(result){
                 $location.hash(result.roomCode);
-                _constructor();
+            };
+
+            $scope.copyRoom = function(){
+                var value = _getHashCode();
+                var $temp = $("<input>");
+                $("body").append($temp);
+                $temp.val(value).select();
+                document.execCommand("copy");
+                $temp.remove();
+                $.notify("Room code copied!", "success");
             };
 
             var _onError = function(result) {
@@ -54,7 +63,7 @@
                 }
 
                 entity.pc.onaddstream = function(e){
-                    $.notify("You have a partner. The video-coference has started!", "success");
+                    
                     remoteVideo.srcObject = e.stream;
                 };
 
@@ -72,8 +81,9 @@
                     }
 
                     if(message.sdp){
+                        $.notify("You have a partner. The video-coference has started!", "success");
                         entity.pc.setRemoteDescription(new RTCSessionDescription(message.sdp), function(){
-                            if(entity.pc.remoteDescription.type == "offer"){
+                            if(entity.pc.remoteDescription.type === "offer"){
                                 entity.pc.createAnswer().then(_localDescCreated).catch(_onError);
                             }
                         }, _onError);
@@ -109,10 +119,14 @@
                     })
                     entity.room.on('members', function(result){
                         var sendSignal = result.length == 2;
+                        console.log("-> "+result.map(e => e.id));
                         if(result.length<=2){
                             _startCall(sendSignal);
                             if(!sendSignal){
                                 $.notify("You are alone in the room, wait for a partner to enter.", "info");    
+                            }
+                            else{
+                                $.notify("You have a partner. The video-coference has started!", "success");
                             }
                         }
                         else{
@@ -125,24 +139,22 @@
 
                 $scope.entity = entity;
             };
-
-            // _constructor();
             
             $scope.$watchCollection('openRoomWindow', function(newValue, oldValue){
                 if(newValue != oldValue || oldValue){
                     if (!$location.hash()) {
                         $scope.openRoomWindow();
                     }
-                    else{
-                        _constructor();
-                    }
                 }
+
             });
 
             
             $timeout(function(){
                 $rootScope.hideLoadingAnimation(true);
-                
+                if ($location.hash()){
+                    _constructor();
+                }
             });
             //#endregion
             // _generateRandomNames(20);
