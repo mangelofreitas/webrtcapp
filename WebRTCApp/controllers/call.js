@@ -62,9 +62,12 @@
                     };
                 }
 
-                entity.pc.onaddstream = function(e){
+                entity.pc.ontrack = function(e){
                     
-                    remoteVideo.srcObject = e.stream;
+                    remoteVideo.srcObject = e.streams[0];
+                    e.track.onended = function(e){
+                        remoteVideo.srcObject = remoteVideo.srcObject;
+                    };
                 };
 
                 navigator.mediaDevices.getUserMedia({
@@ -96,14 +99,20 @@
             //#region Constructor
             var _constructor = function(){
                 // ScaleDrone webrtc_channel
+                console.log("constructor");
                 var entity = {};
                 entity.drone = new ScaleDrone('wRIpraeA5bQ2Q5zh');
                 entity.roomName = 'observable-'+_getHashCode();
                 // entity.roomName = 'observable-test';
                 entity.configuration = {
-                    iceServers: [{
-                        urls: 'stun:stun.l.google.com:19302'
-                    }]
+                    iceServers: [
+                        {urls:'stun:stun.l.google.com:19302'},
+                        {
+                            urls: 'turn:numb.viagenie.ca',
+                            credential: 'muazkh',
+                            username: 'webrtc@live.com'
+                        }
+                    ]
                 };
 
                 entity.drone.on('open',function(result){
